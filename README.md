@@ -1,2 +1,2 @@
 # qadle
-Quiz Applicaiton
+Quiz Application

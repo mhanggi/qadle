@@ -1,7 +1,9 @@
 apply plugin : 'org.springframework.boot'
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    api "org.springframework.boot:spring-boot-starter-web"
+
+    implementation project (':backend:adapters:rest-adapter')
 }
 
 bootJar {

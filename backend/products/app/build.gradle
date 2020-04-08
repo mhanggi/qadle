@@ -1,8 +1,9 @@
 apply plugin : 'org.springframework.boot'
+apply plugin : 'com.google.cloud.tools.jib'
+apply plugin : 'maven-publish'
 
 dependencies {
-    api "org.springframework.boot:spring-boot-starter-web"
-
+    implementation "org.springframework.boot:spring-boot-starter-web"
     implementation project (':backend:adapters:rest-adapter')
 }
 
@@ -11,6 +12,35 @@ bootJar {
     archivesBaseName = 'qadle'
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/mhanggi/qadle")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
 bootRun {
     systemProperties System.properties
+}
+
+jib {
+    to {
+        image = 'qadle:latest'
+    }
+
+    container {
+        ports = ['8080']
+    }
 }

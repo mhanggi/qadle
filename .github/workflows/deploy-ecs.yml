@@ -59,11 +59,13 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: qadle
-        IMAGE_TAG: ${{ echo "$GITHUB_REF" | cut -d "/" -f3 }}
+        #IMAGE_TAG: ${{ echo "$GITHUB_REF" | cut -d "/" -f3 }}
       run: |
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
+        NEW_VERSION=$(echo "${GITHUB_REF}" | cut -d "/" -f3)
+        IMAGE_TAG = $NEW_VERSION
         ./gradlew jibDockerBuild -Djib.to.image="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

@@ -60,13 +60,16 @@ Resources:
             SubnetId: !Ref PublicSubnet
             Tags:
                 - Key: Name
-                  Value: !Sub NAT-${AWS::StackName}
+                  Value: Qadle-NAT-Gateway
 
 
     ElasticIPAddress:
         Type: AWS::EC2::EIP
         Properties:
             Domain: VPC
+            Tags:
+                - Key: Name
+                  Value: Qadle-Elastic-IP
 
 
 
@@ -76,7 +79,7 @@ Resources:
             VpcId: !Ref QadleVPC
             Tags:
                 - Key: Name
-                  Value: Public
+                  Value: Qadle-Public-Route-Table
 
 
     # Public route table has direct routing to IGW
@@ -112,7 +115,7 @@ Resources:
             VpcId: !Ref QadleVPC
             Tags:
                 - Key: Name
-                  Value: Private
+                  Value: Qadle-Private-Route-Table
 
 
     PrivateSubnetRouteTableAssociation:
@@ -120,4 +123,21 @@ Resources:
         Properties:
             SubnetId: !Ref PrivateSubnet
             RouteTableId: !Ref PrivateRouteTable
+
+
+######################### NETWORK SETUP DONE #########################
+
+    EcrRepository:
+        Type: AWS::ECR::Repository
+        Properties: 
+            RepositoryName: qadle
+            Tags: 
+                - Key: Name
+                  Value: Qadle-ECR
+
+
+
+
+
+
 
